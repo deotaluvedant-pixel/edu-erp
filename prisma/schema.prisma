@@ -27,6 +27,8 @@ model User {
   roleId      Int
   role        Role     @relation(fields: [roleId], references: [id])
 
+  student Student?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -87,8 +89,50 @@ model ClassSection {
   stream        Stream       @relation(fields: [streamId], references: [id])
   division      Division     @relation(fields: [divisionId], references: [id])
 
+  students Student[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([academicYearId, classId, streamId, divisionId])
+}
+
+model Student {
+  id                Int      @id @default(autoincrement())
+
+  admissionNumber   String   @unique
+  rollNumber        Int
+
+  fullName          String
+  gender            String
+  dateOfBirth       DateTime
+  bloodGroup        String?
+
+  phone             String
+  email             String?
+  address           String
+  city              String
+  state             String
+  pincode           String
+
+  fatherName        String
+  fatherPhone       String
+  fatherOccupation  String?
+
+  motherName        String
+  motherPhone       String?
+  motherOccupation  String?
+
+  previousSchool    String?
+  admissionDate     DateTime
+  status            String   @default("ACTIVE")
+
+  classSectionId    Int
+  classSection      ClassSection @relation(fields: [classSectionId], references: [id])
+
+  userId            Int?     @unique
+  user              User?    @relation(fields: [userId], references: [id])
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
