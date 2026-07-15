@@ -30,3 +30,65 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model AcademicYear {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  startDate  DateTime
+  endDate    DateTime
+  isActive   Boolean  @default(false)
+
+  classSections ClassSection[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Class {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+
+  classSections ClassSection[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Stream {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+
+  classSections ClassSection[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Division {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+
+  classSections ClassSection[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ClassSection {
+  id Int @id @default(autoincrement())
+
+  academicYearId Int
+  classId        Int
+  streamId       Int
+  divisionId     Int
+
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+  class         Class        @relation(fields: [classId], references: [id])
+  stream        Stream       @relation(fields: [streamId], references: [id])
+  division      Division     @relation(fields: [divisionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([academicYearId, classId, streamId, divisionId])
+}
