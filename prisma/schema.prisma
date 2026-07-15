@@ -13,6 +13,16 @@ enum Gender {
   OTHER
 }
 
+enum Designation {
+  PRINCIPAL
+  VICE_PRINCIPAL
+  HOD
+  LECTURER
+  OFFICE_STAFF
+  ACCOUNTANT
+  LIBRARIAN
+}
+
 model Role {
   id          Int      @id @default(autoincrement())
   name        String   @unique
@@ -26,6 +36,7 @@ model Role {
 
 model User {
   id          Int      @id @default(autoincrement())
+
   email       String   @unique
   password    String
   isActive    Boolean  @default(true)
@@ -33,7 +44,8 @@ model User {
   roleId      Int
   role        Role     @relation(fields: [roleId], references: [id])
 
-  student Student?
+  student     Student?
+  employee    Employee?
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -174,3 +186,35 @@ model StudentEnrollment {
 
   @@unique([academicYearId, classSectionId, rollNumber])
 }
+
+model Employee {
+  id               Int      @id @default(autoincrement())
+
+  employeeCode     String   @unique
+
+  fullName         String
+  gender           Gender
+  dateOfBirth      DateTime
+
+  phone            String
+  email            String?
+
+  address          String
+  city             String
+  state            String
+  pincode          String
+
+  joiningDate      DateTime
+
+  qualification    String?
+  experienceYears  Int?
+
+  designation      Designation
+
+  userId           Int?     @unique
+  user             User?    @relation(fields: [userId], references: [id])
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
