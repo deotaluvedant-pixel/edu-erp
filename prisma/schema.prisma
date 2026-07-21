@@ -61,6 +61,7 @@ model AcademicYear {
   classSections ClassSection[]
   enrollments  StudentEnrollment[]
 
+  teachingAssignments TeachingAssignment[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -111,6 +112,7 @@ model ClassSection {
  
   enrollments   StudentEnrollment[]
 
+  teachingAssignments TeachingAssignment[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -213,18 +215,42 @@ model Employee {
 
   userId           Int?     @unique
   user             User?    @relation(fields: [userId], references: [id])
-
+  
+  teachingAssignments TeachingAssignment[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }
 
 model Subject {
-  id          Int      @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
 
-  code        String   @unique
-  name        String
-  shortName   String?
+  code      String   @unique
+  name      String
+  shortName String?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  teachingAssignments TeachingAssignment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TeachingAssignment {
+  id Int @id @default(autoincrement())
+
+  employeeId Int
+  employee Employee @relation(fields: [employeeId], references: [id])
+
+  subjectId Int
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  classSectionId Int
+  classSection ClassSection @relation(fields: [classSectionId], references: [id])
+
+  academicYearId Int
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([employeeId, subjectId, classSectionId, academicYearId])
 }
